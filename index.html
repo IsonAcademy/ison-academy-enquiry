@@ -648,7 +648,7 @@ input.invalid,select.invalid{border-color:var(--red);box-shadow:0 0 0 3px rgba(2
 </div>
 
 <script>
-var SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwfskkYD5tsKAcVMkhQELLMxBu3t2YZcglrjxOnbsA6qucR2bJyOTMw2g0b9Jve2Px/exec";
 var trackFields = ['fname','lname','email','phone','city','qual'];
 
 function updateProgress(){
@@ -713,7 +713,7 @@ document.getElementById('enquiryForm').addEventListener('submit',function(e){
     source:source||'Not specified',
     message:document.getElementById('message').value.trim()
   };
-  if(SCRIPT_URL==="https://script.google.com/macros/s/AKfycbzwfskkYD5tsKAcVMkhQELLMxBu3t2YZcglrjxOnbsA6qucR2bJyOTMw2g0b9Jve2Px/exec"){
+  if(SCRIPT_URL==="YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"){
     setLoading(true);
     setTimeout(function(){
       setLoading(false);
@@ -725,18 +725,24 @@ document.getElementById('enquiryForm').addEventListener('submit',function(e){
     return;
   }
   setLoading(true);
-  fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)})
-  .then(function(r){return r.json();})
-  .then(function(d){
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+  .then(function() {
     setLoading(false);
     document.getElementById('enquiryForm').style.display='none';
     document.getElementById('successScreen').style.display='block';
     document.getElementById('progressFill').style.width='100%';
+    document.getElementById('progressPct').textContent='100%';
   })
-  .catch(function(){
+  .catch(function(err) {
     setLoading(false);
-    document.getElementById('enquiryForm').style.display='none';
-    document.getElementById('successScreen').style.display='block';
+    alert('Submission failed. Please try again or call us directly.');
+    console.error(err);
   });
 });
 </script>
